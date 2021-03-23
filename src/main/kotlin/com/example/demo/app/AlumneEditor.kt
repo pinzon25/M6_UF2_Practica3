@@ -53,28 +53,14 @@ class AlumneEditor: View() {
                     item("Esborrar").action {
                         selectedItem?.apply { esborrar() }
                     }
-                    item("Crear alumne").action {
-                        var noualumne:Alumne?=null
-                        noualumne = t!!.selectedItem
-                        noualumne!!.nom = t!!.selectedItem!!.nomProperty.get()
-                        noualumne!!.cognoms= t!!.selectedItem!!.cognomsProperty.get()
-                        noualumne!!.edat = t!!.selectedItem!!.edatProperty.get()
+                    item("Crear alumne").action { crear() }
 
-                        controller.CrearNouAlumne(noualumne)
-                    }
                     item("Actualitzar").action {
                         if(itemDirty as Boolean){ controller.actualitza(alu!!) }else{alert(Alert.AlertType.ERROR, "", "L'alumne no s'ha modificat!!!")}
                     }
                     item("Revertir").action {
                         selectedItem?.apply { model.rollbackSelected()
                             println("Has revertit el model.")
-                            var alumneanterior:Alumne?=null
-                            //alumneanterior = controller.obteAlumne(t!!.selectedItem!!.id)
-                            alumneanterior = controller.obteAlumne(t!!.selectedItem!!.id)
-                            println("Alumne anterior: " + alumneanterior)
-                            /*println("Index al item revertir: "+ind)
-                            t!!.items.remove(item)
-                            t!!.items.add(ind!!,alumneanterior)*/
                         }
                     }
                     item("Afegir alumne").action{
@@ -98,19 +84,17 @@ class AlumneEditor: View() {
                 var al:Alumne? =null
                 al = t?.selectedItem
 
-                item = al!!.copy(id=al.id,nom=al.nom,cognoms=al.cognoms,edat=al.edat)
-                ind = t?.selectionModel?.selectedIndex
-                println("index actual: "+ind)
-                //item = llistatAlumnes.get(ind!!)
-                println("\n\nitem actual: " + item)
+                item = al!!.copy(id=al.id,nom=al.nom,cognoms=al.cognoms,edat=al.edat) //Copiem les dades del objecte seleccionat a l'item Alumne, aixo ens permetra verificar canvis.
+                ind = t?.selectionModel?.selectedIndex  //Ens permet saber l'index corresponent al alumne seleccionat al TableView.
+                println("\n\nitem actual: " + item) //Ens mostra l'objecte avans de ser modificat.
                 itemDirty = model.isDirty(al!!)
-                println("L'objecte amb l'index " + ind +" Is dirty?--->"+itemDirty)
+                println("L'objecte amb l'index " + ind +" Is dirty?--->"+itemDirty) //Ens mostra si el model ha detectat canvis a l'objecte seleccionat en aquell moment.
 
                 al.nom = t!!.selectedItem!!.nomProperty.get()
                 al.cognoms= t!!.selectedItem!!.cognomsProperty.get()
                 al.edat = t!!.selectedItem!!.edatProperty.get()
 
-                println(al)
+                println("Alumne modificat: " + al) //Ens mostra l'objecte modificat.
 
                 alu = al.copy(id=al.id,nom=al.nom,cognoms=al.cognoms,edat=al.edat)
 
@@ -121,23 +105,25 @@ class AlumneEditor: View() {
 
     }
 
+    fun crear(){
+        var noualumne:Alumne?=null
+        noualumne = t!!.selectedItem
+        noualumne!!.nom = t!!.selectedItem!!.nomProperty.get()
+        noualumne!!.cognoms= t!!.selectedItem!!.cognomsProperty.get()
+        noualumne!!.edat = t!!.selectedItem!!.edatProperty.get()
+
+        controller.CrearNouAlumne(noualumne)
+    }
+
     fun esborrar(){
         try {
             item = t!!.selectedItem
-            println(item)
             controller.esborraAlumne(item!!.id)
-            t!!.items.removeAt(ind!!)
+            t!!.items.removeAt(ind!!) //Esborra l'alumne del tableview a la posicio indicada per l'index.
         } catch (error: NullPointerException) {
             alert(Alert.AlertType.ERROR, "", "No has seleccionat cap alumne!!!")
         }
     }
-
-    fun inicialitzacamps(){
-        campEdat.text = ""
-        campNom.text=""
-        campCognom.text=""
-    }
-
 }
 
 

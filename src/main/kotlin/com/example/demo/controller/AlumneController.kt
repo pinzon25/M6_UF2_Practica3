@@ -13,10 +13,6 @@ import java.sql.Connection
 class AlumneController : Controller() {
     var c: Connection = Connexio().connexio()
 
-    companion object {
-        // var mPrincipal = MenuPrincipal()
-    }
-
     //AQUEST METODE RETORNA TOTS ELS ALUMNES DE LA BASE DE DADES EN FORMA DE MUTABLELIST.
     fun carregaAlumnes(): MutableList<Alumne> {
         //var c: Connection = Connexio().connexio()
@@ -38,7 +34,6 @@ class AlumneController : Controller() {
 
 
     fun esborraAlumne(id: Int?) {
-        //val l = MenuPrincipal().llistatAlumnes
         val ps = c.prepareStatement("DELETE FROM Alumne WHERE id_alumne = ?")
 
         if (id != null) {
@@ -61,9 +56,6 @@ class AlumneController : Controller() {
         ps.executeUpdate()
         alert(Alert.AlertType.CONFIRMATION, "", "Alumne creat correctament!")
         //c.close()
-        //mPrincipal.model.commit()
-        //mPrincipal.llistatAlumnes.add(alumne)
-
     }
 
     fun actualitza(a: Alumne) {
@@ -91,15 +83,8 @@ class AlumneController : Controller() {
 
             if (id.equals(al.id)) {
                 break;
-
             }
         }
         return al!!
     }
-
-
-        fun save(alumne: Alumne?) {
-            println("Saving ${alumne?.nom} / ${alumne?.cognoms}/${alumne?.edat}")
-        }
-
 }
